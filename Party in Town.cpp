@@ -1,0 +1,53 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution
+{
+public:
+    pair<int, int> bfs(vector<vector<int>> &adj, int start)
+    {
+        int n = adj.size(), farthestNode = start, farthestDist = 0;
+
+        vector<int> dist(n, -1);
+        dist[start] = 0;
+
+        queue<int> q;
+        q.push(start);
+
+        while (!q.empty())
+        {
+            int node = q.front();
+            q.pop();
+
+            for (int next : adj[node])
+            {
+                next--;
+                if (dist[next] == -1)
+                {
+                    dist[next] = dist[node] + 1;
+                    q.push(next);
+
+                    if (dist[next] > farthestDist)
+                    {
+                        farthestDist = dist[next];
+                        farthestNode = next;
+                    }
+                }
+            }
+        }
+
+        return {farthestNode, farthestDist};
+    }
+
+    int partyHouse(vector<vector<int>> &adj)
+    {
+        int n = adj.size();
+        pair<int, int> first = bfs(adj, 0);
+        int diameterEnd = first.first;
+
+        pair<int, int> second = bfs(adj, diameterEnd);
+        int diameter = second.second;
+
+        return (diameter + 1) / 2;
+    }
+};
